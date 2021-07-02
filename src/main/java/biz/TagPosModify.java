@@ -12,7 +12,8 @@ public class TagPosModify {
      * 对模型的输出进行预处理
      * 1. 单个 B I E 转换为S
      * 2. BS BI转换为BE
-     * @param modelOutput
+     * @param inputSent
+     * @param modifiedTags
      * @return
      */
     public String tagPosModifyModelOutput(String inputSent, String modifiedTags) {

@@ -6,7 +6,7 @@
 
     <groupId>com.fordeal.search</groupId>
     <artifactId>dl4j</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>com.microsoft.onnxruntime</groupId>
@@ -34,6 +34,13 @@
             <classifier>models-chinese</classifier>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <artifactId>stellaris-nova</artifactId>
+            <groupId>com.fordeal.search</groupId>
+            <version>1.0.30</version>
+        </dependency>
+
     </dependencies>
 
     <distributionManagement>
