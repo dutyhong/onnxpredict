@@ -36,7 +36,7 @@ public class RuleDataLoad {
      */
     public static boolean checkWordType(String inputStr, String typeName) {
         String cached = getCachedFromGuava(inputStr);
-        if (cached != null || !cached.isEmpty()) {
+        if (cached != null && !cached.isEmpty()) {
             if ("brand".equalsIgnoreCase(typeName)) {
                 return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "1".equals(x.trim()));
             } else if ("category".equalsIgnoreCase(typeName)) {
