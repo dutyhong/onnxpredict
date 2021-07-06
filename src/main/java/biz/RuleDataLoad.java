@@ -16,7 +16,7 @@ public class RuleDataLoad {
         currentNerWordTypeDict = nerWordTypeDict;
     }
 
-    private static String getCachedFromGuava(String inputStr) {
+    private static String getCachedFromNova(String inputStr) {
         try {
             if (currentNerWordTypeDict == null || inputStr == null || inputStr.trim().isEmpty()) {
                 return null;
@@ -35,7 +35,7 @@ public class RuleDataLoad {
      * @return
      */
     public static boolean checkWordType(String inputStr, String typeName) {
-        String cached = getCachedFromGuava(inputStr);
+        String cached = getCachedFromNova(inputStr);
         if (cached != null && !cached.isEmpty()) {
             if ("brand".equalsIgnoreCase(typeName)) {
                 return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "1".equals(x.trim()));
