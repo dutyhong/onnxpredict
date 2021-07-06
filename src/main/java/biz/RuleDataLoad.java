@@ -1,109 +1,117 @@
 package biz;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import com.fordeal.search.stellaris.nova.KVStore;
 
+import java.util.Arrays;
+
+/**
+ * @author muzhong
+ * @date 2021/7/2
+ */
 public class RuleDataLoad {
-    public Set<String> elementWords = new HashSet<>();
-    public Set<String> styleWords = new HashSet<>();
-    public Set<String> beCategoryWords = new HashSet<>();
-    public Set<String> catemodifierWords = new HashSet<>();
-    public Set<String> typeWords = new HashSet<>();
-    public Map<String, String> beforePredictMatchDict = new HashMap<>();
 
-    public RuleDataLoad() {
-        BufferedReader br = null;
-        String tmpStr = null;
-        //直接替换规则的词读取
-        try {
-            Class<ModelPredictResultModify> ds = ModelPredictResultModify.class;
-            InputStream path = RuleDataLoad.class.getResourceAsStream("/match_words_dict");
-            br = new BufferedReader(new InputStreamReader(path));
-            while ((tmpStr = br.readLine()) != null) {
-                tmpStr = tmpStr.trim();
-                String[] columns = tmpStr.split(",");
-                if (columns.length != 2)
-                    continue;
-                beforePredictMatchDict.put(columns[0], columns[1]);
-            }
-            br.close();
-        } catch (IOException E) {
-            E.printStackTrace();
-        }
-        // 风格 款式 品类 品类修饰词读取
-        try {
-            InputStream path = RuleDataLoad.class.getResourceAsStream("/element_words");
-            br = new BufferedReader(new InputStreamReader(path));
-            while ((tmpStr = br.readLine()) != null) {
-                tmpStr = tmpStr.trim();
-                elementWords.add(tmpStr);
-            }
-            br.close();
-        } catch (IOException E) {
-            E.printStackTrace();
-        }
+    private static KVStore currentNerWordTypeDict;
 
-        try {
-            InputStream path = RuleDataLoad.class.getResourceAsStream("/style_words");
-            br = new BufferedReader(new InputStreamReader(path));
-            while ((tmpStr = br.readLine()) != null) {
-                tmpStr = tmpStr.trim();
-                styleWords.add(tmpStr);
-            }
-            br.close();
-        } catch (IOException E) {
-            E.printStackTrace();
-        }
+    public static void init(KVStore nerWordTypeDict) {
+        currentNerWordTypeDict = nerWordTypeDict;
+    }
 
+    private static String getCachedFromGuava(String inputStr) {
         try {
-            InputStream path = RuleDataLoad.class.getResourceAsStream("/type_words");
-            br = new BufferedReader(new InputStreamReader(path));
-            while ((tmpStr = br.readLine()) != null) {
-                tmpStr = tmpStr.trim();
-                typeWords.add(tmpStr);
+            if (currentNerWordTypeDict == null || inputStr == null || inputStr.trim().isEmpty()) {
+                return null;
             }
-            br.close();
-        } catch (IOException E) {
-            E.printStackTrace();
-        }
-
-        try {
-            InputStream path = RuleDataLoad.class.getResourceAsStream("/catemodifier_words");
-            br = new BufferedReader(new InputStreamReader(path));
-            while ((tmpStr = br.readLine()) != null) {
-                tmpStr = tmpStr.trim();
-                catemodifierWords.add(tmpStr);
-            }
-            br.close();
-        } catch (IOException E) {
-            E.printStackTrace();
-        }
-
-        try {
-            InputStream path = RuleDataLoad.class.getResourceAsStream("/be_category_tmp");
-            br = new BufferedReader(new InputStreamReader(path));
-            while ((tmpStr = br.readLine()) != null) {
-                tmpStr = tmpStr.trim();
-
-                String[] columns = tmpStr.split(";");
-                if (columns.length != 2)
-                    continue;
-                beCategoryWords.add(columns[0]);
-            }
-            br.close();
-        } catch (IOException E) {
-            E.printStackTrace();
+            return (String) currentNerWordTypeDict.get(inputStr);
+        } catch (Exception e) {
+            return null;
         }
     }
 
-    public static void main(String[] args) {
-        RuleDataLoad ruleDataLoad = new RuleDataLoad();
-        System.out.println("ddd");
+    /**
+     * https://wiki.duolainc.com/pages/viewpage.action?pageId=39199080
+     * 检查ner词库分词，该inputStr 是否是 typeName 类型的词
+     * @param inputStr
+     * @param typeName
+     * @return
+     */
+    public static boolean checkWordType(String inputStr, String typeName) {
+        String cached = getCachedFromGuava(inputStr);
+        if (cached != null && !cached.isEmpty()) {
+            if ("brand".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "1".equals(x.trim()));
+            } else if ("category".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "2".equals(x.trim()));
+            }  else if ("property".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "3".equals(x.trim()));
+            } else if ("population".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "4".equals(x.trim()));
+            } else if ("phrase".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "5".equals(x.trim()));
+            } else if ("modifier".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "7".equals(x.trim()));
+            } else if ("color".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "8".equals(x.trim()));
+            } else if ("style".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "9".equals(x.trim()));
+            } else if ("scene".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "10".equals(x.trim()));
+            } else if ("function".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "11".equals(x.trim()));
+            } else if ("size".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "12".equals(x.trim()));
+            } else if ("type".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "13".equals(x.trim()));
+            } else if ("catemodifier".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "14".equals(x.trim()));
+            } else if ("material".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "15".equals(x.trim()));
+            } else if ("element".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "16".equals(x.trim()));
+            } else if ("age".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "17".equals(x.trim()));
+            } else if ("ip".equalsIgnoreCase(typeName)) {
+                return Arrays.asList(cached.split(",")).stream().anyMatch(x -> "18".equals(x.trim()));
+            } else {
+                return false;
+            }
+        }
+        return false;
     }
+
+    public static boolean isElementWord(String inputStr) {
+        return checkWordType(inputStr, "element");
+    }
+
+    public static boolean isStyle(String inputStr) {
+        return checkWordType(inputStr, "style");
+    }
+
+    public static boolean isBeCategory(String inputStr) {
+        return checkWordType(inputStr, "category");
+    }
+
+    public static boolean isCateModifier(String inputStr) {
+        return checkWordType(inputStr, "catemodifier");
+    }
+
+    public static boolean isType(String inputStr) {
+        return checkWordType(inputStr, "type");
+    }
+
+    public static boolean isBrand(String inputStr) {
+        return checkWordType(inputStr, "brand");
+    }
+
+    public static boolean isIp(String inputStr) {
+        return checkWordType(inputStr, "ip");
+    }
+
+    public static boolean isPopulation(String inputStr) {
+        return checkWordType(inputStr, "population");
+    }
+
+    public static boolean isFunction(String inputStr) {
+        return checkWordType(inputStr, "function");
+    }
+
 }
