@@ -1,4 +1,4 @@
-package biz.stanfordNlp;
+package stanfordNlp;//package biz.stanfordNlp;
 
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;

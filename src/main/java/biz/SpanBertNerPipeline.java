@@ -61,9 +61,9 @@ public class SpanBertNerPipeline {
         ModelPredictResultModify modelPredictResultModify = new ModelPredictResultModify();
         List<List<String>> results = new ArrayList<>();
 //        path = SpanBertNerPipeline.class.getResourceAsStream("/src/test/new_test_data");
-        String testPath = "/Users/duty/work/dl4j/src/test/new_test_data";
+        String testPath = "/Users/duty/work/deep4j/src/test/cate_config_data2";
         br = new BufferedReader(new FileReader(testPath));
-        BufferedWriter bw = new BufferedWriter(new FileWriter("/Users/duty/PycharmProjects/tz_nlp/data/tmp_span_bert_evaluate_result4j"));
+        BufferedWriter bw = new BufferedWriter(new FileWriter("/Users/duty/PycharmProjects/tz_nlp/data/text2cate/cate_config_data_ner2"));
         ModelOutputAnalyze modelOutputAnalyze = new ModelOutputAnalyze();
         AgeEntityExtract ageEntityExtract = new AgeEntityExtract();
 //        ModelOutput2BizOutput modelOutput2BizOutput = new ModelOutput2BizOutput();

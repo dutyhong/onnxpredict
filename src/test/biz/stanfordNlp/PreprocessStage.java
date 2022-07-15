@@ -1,7 +1,8 @@
-package biz.stanfordNlp;
+package stanfordNlp;
 
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
+import stanfordNlp.LemmaExtract;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -110,7 +111,7 @@ public class PreprocessStage {
     public static void main(String[] args) {
         StanfordCoreNLP pipeline = InitializedPipeline.pipeline;
         String text = "playing games kids 10 year old";
-        String[] texts = {"playing games kids 10 year old", "children clothing for boys from 7 to 11 years", "children clothes for six month boys", "clothes  3 to 6 day child",
+        String[] texts = {"gucci bags", "children clothing for boys from 7 to 11 years", "children clothes for six month boys", "clothes  3 to 6 day child",
                 "children's wedding dresses for the age of 11", "baby girls ’clothes from the age of nine to ten"};
         for (int i = 0; i < texts.length; i++) {
             String tmpText = texts[i];
